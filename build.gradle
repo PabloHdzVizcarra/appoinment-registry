@@ -29,5 +29,5 @@ jar {
 }
 
 application {
-    mainClassName = 'com.patient.ClinicMain'
+    getMainClass().set('com.patient.ClinicMain')
 }

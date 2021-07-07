@@ -2,9 +2,9 @@ package com.patient;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class ClinicCalendar
@@ -73,7 +73,7 @@ public class ClinicCalendar
 
     /**
      * Creates a {@link List} that cannot be modified, with {@link PatientAppointment}
-     *  Objects that have the current date as their date.
+     *  Objects that have date set today.
      *
      * @return A {@link List} of {@link PatientAppointment} that have the current date
      */
@@ -82,5 +82,18 @@ public class ClinicCalendar
         return this.appointments.stream()
                 .filter(appt -> appt.getAppointmentLocalDate().equals(today))
                 .collect(Collectors.toUnmodifiableList());
+    }
+
+    /**
+     *  Creates a {@link List} that cannot be modified, with {@link PatientAppointment}
+     * Objects that have field appointmentDateTime set tomorrow.
+     *
+     * @return A {@link List} of {@link PatientAppointment} that have the tomorrow date
+     */
+    public List<PatientAppointment> getUpcomingAppointments()
+    {
+        return appointments.stream()
+            .filter(appt -> appt.getAppointmentDateTime().toLocalDate().isAfter(today))
+            .collect(Collectors.toList());
     }
 }

@@ -1,6 +1,8 @@
 package com.patient;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -97,6 +99,31 @@ class ClinicCalendarTest
             "avery");
 
         assertEquals(2, calendar.getTodayAppointments().size());
+    }
+
+    @Nested
+    @DisplayName("return tomorrow appointments")
+    class TodayAppointments
+    {
+        @Test
+        void whenThereAreNone()
+        {
+            List<PatientAppointment> appointmentList = calendar.getUpcomingAppointments();
+            assertEquals(0, appointmentList.size());
+        }
+
+        @Test
+        void whenThereSomePastAndFuture()
+        {
+            calendar.addAppointment("Pablo", "Hernandez",
+                "today 2:00 pm", "avery");
+            calendar.addAppointment("Seda", "Irwin",
+                "today 4:00 pm", "avery");
+            calendar.addAppointment("Nele", "Thompson",
+                "07/08/2021 2:00 pm", "avery");
+
+            assertEquals(1, calendar.getUpcomingAppointments().size());
+        }
     }
 
 }
