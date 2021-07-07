@@ -1,13 +1,13 @@
 package com.patient;
 
+import com.patient.show.Shows;
+
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
-// TODO: 7/7/21 Create a universal form to show appointments in console
 public class ClinicMain
 {
     private static ClinicCalendar calendar;
@@ -141,17 +141,16 @@ public class ClinicMain
 
     private static void performAllAppointments()
     {
-        System.out.println("\n\n All Appointments in System:");
-        for (PatientAppointment appointment : calendar.getAppointments())
+        System.out.println("\n\n All Appointments in System: \n");
+        if (calendar.getTodayAppointments().size() == 0)
         {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy hh:mm a");
-            String appTime = formatter.format(appointment.getAppointmentDateTime());
-            System.out.println(
-                "Date = " + appTime +
-                    " - " + appointment.getPatientFirstName() +
-                    " " + appointment.getPatientLastName() +
-                    ", Doctor: " + appointment.getDoctor().getName());
+            Shows.notAppointments();
         }
-        System.out.println("\nPress any key yo continue...");
+        else
+        {
+            calendar.getAppointments().forEach(Shows::byConsole);
+        }
+        System.out.println("\nPress any key yo continue... \n");
     }
+
 }
