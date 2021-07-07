@@ -18,8 +18,8 @@ public class Shows
                 ", Doctor: " + appointment.getDoctor().getName());
     }
 
-    public static void notAppointments()
+    public static void notAppointments(String message)
     {
-        System.out.println("-- Sorry you do not have any appointment assigned");
+        System.out.println(message);
     }
 }

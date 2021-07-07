@@ -25,8 +25,6 @@ public class ClinicMain
         System.out.println("\nExiting System...\n");
     }
 
-    // TODO: 7/7/21 step 5 show current days appointments
-    // TODO: 7/7/21 step 6 show tomorrow appointments
     private static String displayMenu(Scanner scanner)
     {
         System.out.println("Please select an option:");
@@ -34,6 +32,7 @@ public class ClinicMain
         System.out.println("2. View All Appointments");
         System.out.println("3. View Today's Appointments");
         System.out.println("4. Enter Patient Height Weight");
+        System.out.println("5. View Tomorrow Appointments");
         System.out.println("X. Exit System");
         System.out.println("Option: ");
         String option = scanner.next();
@@ -51,9 +50,24 @@ public class ClinicMain
                 return option;
             case "4":
                 performHeightWeight(scanner);
+            case "5":
+                performTomorrowAppointments();
             default:
                 System.out.println("Invalid option, please re-enter");
                 return option;
+        }
+    }
+
+    private static void performTomorrowAppointments()
+    {
+        List<PatientAppointment> upcomingAppointments = calendar.getUpcomingAppointments();
+
+        if (upcomingAppointments.size() == 0)
+        {
+            Shows.notAppointments("-- Sorry you do not have any appointments tomorrow");
+        } else
+        {
+            upcomingAppointments.forEach(Shows::byConsole);
         }
     }
 
@@ -83,8 +97,7 @@ public class ClinicMain
             double roundedToTwoPlaces = BMICalculator.calculateBmi(inches, pounds);
             appointment.setBmi(roundedToTwoPlaces);
             System.out.println("Set patient BMI to " + roundedToTwoPlaces + "\n\n");
-        }
-        else
+        } else
         {
             System.out.println("Patient not found.\n\n");
         }
@@ -103,13 +116,14 @@ public class ClinicMain
     private static void performTodayAppointments()
     {
         List<PatientAppointment> todayAppointments = calendar.getTodayAppointments();
-        todayAppointments.forEach(patientAppointment ->
-            System.out.println(
-                "Date = " + patientAppointment.getAppointmentDateTime() +
-                    " - " + patientAppointment.getPatientFirstName() +
-                    " " + patientAppointment.getPatientLastName() +
-                    ", Doctor: " + patientAppointment.getDoctor().getName()
-            ));
+
+        if (todayAppointments.size() == 0)
+        {
+            Shows.notAppointments("-- Sorry you do not have any appointments today");
+        } else
+        {
+            todayAppointments.forEach(Shows::byConsole);
+        }
     }
 
     private static void performPatientEntry(Scanner scanner)
@@ -144,9 +158,8 @@ public class ClinicMain
         System.out.println("\n\n All Appointments in System: \n");
         if (calendar.getTodayAppointments().size() == 0)
         {
-            Shows.notAppointments();
-        }
-        else
+            Shows.notAppointments("-- Sorry you do not have any appointment assigned");
+        } else
         {
             calendar.getAppointments().forEach(Shows::byConsole);
         }
