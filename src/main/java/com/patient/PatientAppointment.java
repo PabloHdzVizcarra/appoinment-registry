@@ -10,6 +10,7 @@ public class PatientAppointment
     private final String patientLastName;
     private final LocalDateTime appointmentDateTime;
     private final Doctor doctor;
+    private double bmi;
 
     public PatientAppointment(String patientFirstName, String patientLastName,
                               LocalDateTime appointmentDateTime, Doctor doctor)
@@ -18,7 +19,6 @@ public class PatientAppointment
         this.patientLastName = patientLastName;
         this.appointmentDateTime = appointmentDateTime;
         this.doctor = doctor;
-
     }
 
     public String getPatientFirstName()
@@ -49,11 +49,12 @@ public class PatientAppointment
     public String toString()
     {
         return "PatientAppointment{" +
-                "patientFirstName='" + patientFirstName + '\'' +
-                ", patientLastName='" + patientLastName + '\'' +
-                ", appointmentDateTime=" + appointmentDateTime +
-                ", doctor=" + doctor +
-                '}';
+            "patientFirstName='" + patientFirstName + '\'' +
+            ", patientLastName='" + patientLastName + '\'' +
+            ", appointmentDateTime=" + appointmentDateTime +
+            ", doctor=" + doctor +
+            ", bmi=" + bmi +
+            '}';
     }
 
     /**
@@ -64,5 +65,15 @@ public class PatientAppointment
     public LocalDate getAppointmentLocalDate()
     {
         return appointmentDateTime.toLocalDate();
+    }
+
+    public void setBmi(double roundedToTwoPlaces)
+    {
+        this.bmi = roundedToTwoPlaces;
+    }
+
+    public double getBmi()
+    {
+        return bmi;
     }
 }

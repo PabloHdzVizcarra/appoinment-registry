@@ -3,8 +3,11 @@ package com.patient;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
+// TODO: 7/7/21 Create a universal form to show appointments in console
 public class ClinicMain
 {
     private static ClinicCalendar calendar;
@@ -22,12 +25,15 @@ public class ClinicMain
         System.out.println("\nExiting System...\n");
     }
 
+    // TODO: 7/7/21 step 5 show current days appointments
+    // TODO: 7/7/21 step 6 show tomorrow appointments
     private static String displayMenu(Scanner scanner)
     {
         System.out.println("Please select an option:");
         System.out.println("1. Enter a Patient Appointment");
         System.out.println("2. View All Appointments");
         System.out.println("3. View Today's Appointments");
+        System.out.println("4. Enter Patient Height Weight");
         System.out.println("X. Exit System");
         System.out.println("Option: ");
         String option = scanner.next();
@@ -43,24 +49,67 @@ public class ClinicMain
             case "3":
                 performTodayAppointments();
                 return option;
+            case "4":
+                performHeightWeight(scanner);
             default:
                 System.out.println("Invalid option, please re-enter");
                 return option;
         }
     }
 
+    private static void performHeightWeight(Scanner scanner)
+    {
+        scanner.nextLine();
+        System.out.println("Enter patient height nd weight for today's appointment");
+
+        System.out.println("  Patient Last Name: ");
+        String lastname = scanner.nextLine();
+
+        System.out.println("  Patient First Name: ");
+        String firstname = scanner.nextLine();
+
+        PatientAppointment appointment = (PatientAppointment) findPatientAppointment(lastname,
+            firstname)
+            .orElse(null);
+
+        if (appointment != null)
+        {
+            System.out.println("  Height in Kilos: ");
+            int inches = scanner.nextInt();
+
+            System.out.println("  Weight in Meters");
+            int pounds = scanner.nextInt();
+
+            double roundedToTwoPlaces = BMICalculator.calculateBmi(inches, pounds);
+            appointment.setBmi(roundedToTwoPlaces);
+            System.out.println("Set patient BMI to " + roundedToTwoPlaces + "\n\n");
+        }
+        else
+        {
+            System.out.println("Patient not found.\n\n");
+        }
+    }
+
+    private static Optional<Object> findPatientAppointment(String lastname, String firstname)
+    {
+        List<PatientAppointment> collect = calendar.getAppointments().stream()
+            .filter(patientAppointment ->
+                patientAppointment.getPatientFirstName().equals(firstname) &&
+                    patientAppointment.getPatientLastName().equals(lastname))
+            .collect(Collectors.toList());
+        return Optional.of(collect.get(0));
+    }
+
     private static void performTodayAppointments()
     {
         List<PatientAppointment> todayAppointments = calendar.getTodayAppointments();
         todayAppointments.forEach(patientAppointment ->
-        {
             System.out.println(
-                    "Date = " + patientAppointment.getAppointmentDateTime() +
-                            " - " + patientAppointment.getPatientFirstName() +
-                            " " + patientAppointment.getPatientLastName() +
-                            ", Doctor: " + patientAppointment.getDoctor().getName()
-            );
-        });
+                "Date = " + patientAppointment.getAppointmentDateTime() +
+                    " - " + patientAppointment.getPatientFirstName() +
+                    " " + patientAppointment.getPatientLastName() +
+                    ", Doctor: " + patientAppointment.getDoctor().getName()
+            ));
     }
 
     private static void performPatientEntry(Scanner scanner)
@@ -98,10 +147,10 @@ public class ClinicMain
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("M/d/yyyy hh:mm a");
             String appTime = formatter.format(appointment.getAppointmentDateTime());
             System.out.println(
-                    "Date = " + appTime +
-                            " - " + appointment.getPatientFirstName() +
-                            " " + appointment.getPatientLastName() +
-                            ", Doctor: " + appointment.getDoctor().getName());
+                "Date = " + appTime +
+                    " - " + appointment.getPatientFirstName() +
+                    " " + appointment.getPatientLastName() +
+                    ", Doctor: " + appointment.getDoctor().getName());
         }
         System.out.println("\nPress any key yo continue...");
     }
