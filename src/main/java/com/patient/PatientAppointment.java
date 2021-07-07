@@ -37,6 +37,9 @@ public class PatientAppointment
     }
 
 
+    /**
+     * @return The {@link Doctor} Object assigned to this class
+     */
     public Doctor getDoctor()
     {
         return doctor;
