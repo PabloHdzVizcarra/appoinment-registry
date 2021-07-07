@@ -61,8 +61,8 @@ public class PatientAppointment
      *
      * @return A {@link LocalDate} Object
      */
-    public LocalDateTime getAppointmentLocalDate()
+    public LocalDate getAppointmentLocalDate()
     {
-        return appointmentDateTime;
+        return appointmentDateTime.toLocalDate();
     }
 }
